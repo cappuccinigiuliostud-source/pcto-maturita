@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCTO – Banco Alimentare della Toscana</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #1a3a2a;
+    --green-mid:  #2d6a4f;
+    --green-light:#52b788;
+    --cream:      #f4f1e8;
+    --cream-dark: #e8e3d4;
+    --gold:       #c9a84c;
+    --text:       #1a1a1a;
+    --text-light: #5a5a5a;
+    --white:      #ffffff;
+    --red-accent: #8b3a3a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--green-dark);
+    display: flex; align-items: center;
+    padding: 0 2rem;
+    height: 52px;
+    border-bottom: 2px solid var(--gold);
+  }
+  nav a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0 1rem; height: 52px; display: flex; align-items: center;
+    border-bottom: 2px solid transparent; margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  nav a:hover, nav a.active { color: var(--gold); border-color: var(--gold); }
+  nav .nav-title {
+    margin-right: auto; color: var(--white);
+    font-family: 'Playfair Display', serif; font-size: 15px;
+  }
+
+  section {
+    min-height: 100vh;
+    padding: 80px 0 60px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
+
+  #hero { background: var(--green-dark); color: var(--white); position: relative; overflow: hidden; }
+  #hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(82,183,136,0.12) 0%, transparent 60%);
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1.1; color: var(--white); margin-bottom: 1.5rem;
+  }
+  .hero-title em { color: var(--green-light); font-style: normal; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .hero-meta span {
+    font-size: 13px; color: rgba(255,255,255,0.65);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .hero-meta span::before { content: '—'; color: var(--gold); }
+  .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px; padding: 5px 14px; font-size: 12px; color: rgba(255,255,255,0.8);
+  }
+
+  .sec-num {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--green-mid); margin-bottom: 0.5rem;
+  }
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    color: var(--green-dark); margin-bottom: 2rem; line-height: 1.2;
+  }
+  .divider { width: 48px; height: 3px; background: var(--gold); border-radius: 2px; margin-bottom: 2rem; }
+
+  #azienda { background: var(--white); }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .info-card {
+    background: var(--cream); border-radius: 12px;
+    padding: 1.5rem; border-left: 4px solid var(--green-mid);
+  }
+  .info-card h3 { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 0.75rem; }
+  .info-card p { font-size: 15px; color: var(--text); line-height: 1.5; }
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2rem; }
+  .stat { background: var(--green-dark); border-radius: 10px; padding: 1.25rem 1rem; text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); display: block; }
+  .stat-label { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 4px; display: block; }
+
+  #reparti { background: var(--cream); }
+  .reparti-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .reparto-card {
+    background: var(--white); border-radius: 14px;
+    padding: 1.5rem; border: 1px solid var(--cream-dark);
+    position: relative; overflow: hidden;
+  }
+  .reparto-card::before {
+    content: attr(data-num); position: absolute; right: 1rem; top: 0.5rem;
+    font-family: 'Playfair Display', serif; font-size: 4rem; color: var(--cream-dark);
+    line-height: 1; pointer-events: none;
+  }
+  .reparto-tag {
+    display: inline-block; background: var(--green-mid); color: var(--white);
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px; margin-bottom: 0.75rem;
+  }
+  .reparto-card.selezione .reparto-tag { background: var(--red-accent); }
+  .reparto-card.surgelati .reparto-tag { background: #2a5f8a; }
+  .reparto-card.partite .reparto-tag { background: #5a3e7a; }
+  .reparto-card h3 { font-size: 17px; font-weight: 600; color: var(--green-dark); margin-bottom: 0.75rem; }
+  .reparto-card ul { list-style: none; }
+  .reparto-card ul li {
+    font-size: 13.5px; color: var(--text-light);
+    padding: 4px 0; display: flex; gap: 8px; align-items: flex-start;
+  }
+  .reparto-card ul li::before { content: '›'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+  #riflessione { background: var(--green-dark); color: var(--white); }
+  #riflessione .sec-num { color: var(--gold); }
+  #riflessione .sec-title { color: var(--white); }
+  .riflessione-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+  .rif-box {
+    background: rgba(255,255,255,0.06); border-radius: 12px;
+    padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1);
+  }
+  .rif-box h3 { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+  .rif-box.punti h3 { color: var(--green-light); }
+  .rif-box.criticit h3 { color: #e08080; }
+  .rif-box ul { list-style: none; }
+  .rif-box ul li {
+    font-size: 13.5px; color: rgba(255,255,255,0.75);
+    padding: 5px 0; display: flex; gap: 8px; align-items: flex-start;
+  }
+  .rif-box.punti ul li::before { content: '✦'; color: var(--green-light); flex-shrink: 0; font-size: 10px; margin-top: 4px; }
+  .rif-box.criticit ul li::before { content: '△'; color: #e08080; flex-shrink: 0; font-size: 10px; margin-top: 4px; }
+  .valutazione-box { background: var(--gold); border-radius: 12px; padding: 1.5rem 2rem; }
+  .valutazione-box p { font-size: 15px; color: var(--green-dark); font-style: italic; line-height: 1.6; }
+
+  #crescita { background: var(--cream); }
+  .crescita-timeline { display: flex; gap: 0; position: relative; }
+  .crescita-timeline::before {
+    content: ''; position: absolute; top: 28px; left: 28px; right: 28px; height: 2px;
+    background: linear-gradient(to right, var(--red-accent), var(--gold), var(--green-mid));
+  }
+  .crescita-step { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 0.75rem; }
+  .step-dot {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 1rem; position: relative; z-index: 1;
+    border: 3px solid var(--cream);
+  }
+  .step-dot.before { background: var(--red-accent); }
+  .step-dot.durante { background: var(--gold); }
+  .step-dot.dopo { background: var(--green-mid); }
+  .step-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.5rem; }
+  .step-text { font-size: 13.5px; color: var(--text); line-height: 1.5; }
+
+  #avatar { background: var(--white); }
+  .avatar-wrapper { background: var(--green-dark); border-radius: 20px; padding: 2rem; color: var(--white); }
+  .avatar-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+  .avatar-pic {
+    width: 80px; height: 80px; border-radius: 50%;
+    border: 3px solid var(--gold); overflow: hidden;
+    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; cursor: pointer; flex-shrink: 0; transition: border-color 0.4s;
+  }
+  .avatar-pic img { width: 100%; height: 100%; object-fit: cover; display: none; }
+  .avatar-pic.speaking { border-color: var(--green-light); animation: ringpulse 1.5s infinite; }
+  @keyframes ringpulse { 0%,100%{box-shadow:0 0 0 0 rgba(82,183,136,0.4)} 50%{box-shadow:0 0 0 8px rgba(82,183,136,0)} }
+  .avatar-info h3 { font-size: 18px; font-weight: 600; }
+  .avatar-info p { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .avatar-badge {
+    background: var(--gold); color: var(--green-dark);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px; display: inline-block; margin-top: 4px;
+  }
+  .voice-row { display: flex; gap: 8px; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .voice-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 5px 14px; font-size: 12px;
+    color: rgba(255,255,255,0.8); cursor: pointer; transition: background 0.2s;
+  }
+  .voice-btn:hover { background: rgba(255,255,255,0.2); }
+  .voice-btn.on { background: var(--green-mid); border-color: var(--green-mid); color: #fff; }
+  .chat-box {
+    background: rgba(0,0,0,0.25); border-radius: 12px;
+    padding: 1rem; min-height: 160px; max-height: 260px;
+    overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem;
+  }
+  .msg { display: flex; gap: 8px; align-items: flex-start; }
+  .msg.user { flex-direction: row-reverse; }
+  .bubble { padding: 8px 13px; border-radius: 12px; font-size: 13.5px; line-height: 1.5; max-width: 82%; }
+  .msg.ai .bubble { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); border-radius: 4px 12px 12px 12px; white-space: pre-wrap; }
+  .msg.user .bubble { background: var(--gold); color: var(--green-dark); border-radius: 12px 4px 12px 12px; }
+  .msg-av {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    overflow: hidden; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; background: rgba(255,255,255,0.15);
+  }
+  .msg-av img { width: 100%; height: 100%; object-fit: cover; display: none; }
+  .typing-dots { display: flex; gap: 4px; padding: 10px 13px; }
+  .typing-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); animation: tdot 1.2s infinite; }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes tdot { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+  .suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.75rem; }
+  .sug-btn {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px; padding: 5px 12px; font-size: 12px;
+    color: rgba(255,255,255,0.75); cursor: pointer; transition: all 0.2s;
+  }
+  .sug-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  .input-row { display: flex; gap: 8px; }
+  .input-row textarea {
+    flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px; padding: 9px 13px; font-size: 13.5px;
+    color: #fff; font-family: inherit; resize: none; outline: none; line-height: 1.4;
+  }
+  .input-row textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .input-row textarea:focus { border-color: var(--gold); }
+  .send-btn {
+    background: var(--gold); border: none; border-radius: 10px;
+    padding: 0 18px; font-size: 13px; font-weight: 600;
+    color: var(--green-dark); cursor: pointer; align-self: stretch; transition: opacity 0.2s;
+  }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .offline-note { font-size: 11px; color: rgba(255,255,255,0.35); text-align: center; margin-top: 0.75rem; }
+  input[type=file] { display: none; }
+
+  @media (max-width: 680px) {
+    .info-grid, .reparti-grid, .riflessione-grid { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: repeat(2,1fr); }
+    .crescita-timeline { flex-direction: column; }
+    .crescita-timeline::before { display: none; }
+    nav a { font-size: 10px; padding: 0 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-title">PCTO 2026</span>
+  <a href="#hero" class="active">Intro</a>
+  <a href="#azienda">Azienda</a>
+  <a href="#reparti">Reparti</a>
+  <a href="#riflessione">Riflessione</a>
+  <a href="#crescita">Crescita</a>
+  <a href="#avatar">Jolly ✦</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Colloquio Esame di Stato 2025–2026 · Classe V SIA</div>
+    <h1 class="hero-title">Percorso PCTO<br><em>Banco Alimentare</em><br>della Toscana</h1>
+    <div class="hero-meta">
+      <span>Istituto Duca d'Aosta, Firenze</span>
+      <span>Indirizzo SIA</span>
+      <span>Maggio – Giugno 2024</span>
+    </div>
+    <div class="hero-pills">
+      <span class="pill">Stage aziendale</span>
+      <span class="pill">Terzo Settore</span>
+      <span class="pill">4 reparti operativi</span>
+      <span class="pill">Legge Gadda 166/2016</span>
+      <span class="pill">SAP gestionale</span>
+    </div>
+  </div>
+</section>
+
+<!-- AZIENDA -->
+<section id="azienda">
+  <div class="container">
+    <div class="sec-num">01 — L'azienda</div>
+    <h2 class="sec-title">Banco Alimentare della Toscana</h2>
+    <div class="divider"></div>
+    <div class="info-grid">
+      <div class="info-card"><h3>Settore</h3><p>Terzo Settore / Non-profit<br>Fondazione ONLUS</p></div>
+      <div class="info-card"><h3>Missione</h3><p>Raccolta e redistribuzione di alimenti per le persone in difficoltà</p></div>
+      <div class="info-card"><h3>Normativa di riferimento</h3><p>Legge Gadda n.166/2016 — contrasto agli sprechi alimentari</p></div>
+      <div class="info-card"><h3>Gestionale utilizzato</h3><p>SAP — sistema ERP usato in moltissime aziende reali a livello internazionale</p></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-num">4</span><span class="stat-label">studenti nel team</span></div>
+      <div class="stat"><span class="stat-num">4</span><span class="stat-label">reparti operativi</span></div>
+      <div class="stat"><span class="stat-num">3</span><span class="stat-label">settimane di stage</span></div>
+      <div class="stat"><span class="stat-num">SAP</span><span class="stat-label">gestionale aziendale</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- REPARTI -->
+<section id="reparti">
+  <div class="container">
+    <div class="sec-num">02 — Le attività svolte</div>
+    <h2 class="sec-title">I 4 reparti operativi</h2>
+    <div class="divider"></div>
+    <div class="reparti-grid">
+      <div class="reparto-card" data-num="1">
+        <span class="reparto-tag">Front Office</span>
+        <h3>Accoglienza e documenti</h3>
+        <ul>
+          <li>Accoglienza dei richiedenti la merce</li>
+          <li>Compilazione e consegna fisica delle bolle di accompagnamento</li>
+          <li>Caricamento dati sul gestionale SAP</li>
+          <li>Monitoraggio delle consegne ancora da evadere</li>
+        </ul>
+      </div>
+      <div class="reparto-card selezione" data-num="2">
+        <span class="reparto-tag">Selezione – Legge Gadda</span>
+        <h3>Controllo prodotti</h3>
+        <ul>
+          <li>DPI obbligatori: guanti, casacca, protezioni ai piedi</li>
+          <li>Prodotti in esubero o in scadenza inviati dai supermercati</li>
+          <li>Valutazione prodotto per prodotto: scaduto, aperto, ammuffito, infiltrazioni</li>
+          <li>Tabella di vita residua oltre la data di scadenza</li>
+          <li>Smistamento sul nastro trasportatore o rottamazione</li>
+        </ul>
+      </div>
+      <div class="reparto-card surgelati" data-num="3">
+        <span class="reparto-tag">Surgelati</span>
+        <h3>Gestione catena del freddo</h3>
+        <ul>
+          <li>Compilazione bolle dedicate ai prodotti surgelati</li>
+          <li>Controllo e smistamento a temperatura controllata</li>
+          <li>Maggiore attenzione rispetto ai prodotti secchi</li>
+        </ul>
+      </div>
+      <div class="reparto-card partite" data-num="4">
+        <span class="reparto-tag">Partite (SAP)</span>
+        <h3>Gestione informatica</h3>
+        <ul>
+          <li>Creazione di partite per categorie alimentari su SAP</li>
+          <li>Alimentazione del gestionale per tutti i reparti</li>
+          <li>Controllo merce in entrata e in uscita dal magazzino</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RIFLESSIONE -->
+<section id="riflessione">
+  <div class="container">
+    <div class="sec-num">03 — Riflessione critica</div>
+    <h2 class="sec-title">Punti di forza e criticità</h2>
+    <div class="divider"></div>
+    <div class="riflessione-grid">
+      <div class="rif-box punti">
+        <h3>Punti di forza</h3>
+        <ul>
+          <li>Applicazione pratica di SAP, standard ERP in aziende reali</li>
+          <li>Contatto diretto con il mondo del lavoro e professionisti adulti</li>
+          <li>Team working: coordinamento su incarichi specifici</li>
+          <li>Comprensione concreta della Legge Gadda e del suo impatto sociale</li>
+          <li>Consapevolezza del ruolo dei sistemi informativi in azienda</li>
+        </ul>
+      </div>
+      <div class="rif-box criticit">
+        <h3>Criticità</h3>
+        <ul>
+          <li>Reparto selezione molto ripetitivo e con poca interazione</li>
+          <li>Difficoltà iniziale nell'utilizzo del gestionale SAP</li>
+          <li>Gap evidente tra teoria scolastica e pratica aziendale</li>
+          <li>Stage non direttamente collegato all'indirizzo SIA</li>
+        </ul>
+      </div>
+    </div>
+    <div class="valutazione-box">
+      <p><strong>Valutazione complessiva:</strong> è stata un'esperienza particolare — ho conosciuto una gestione del lavoro completamente diversa da quella scolastica. Il contatto con SAP e i database mi ha fatto vedere in modo concreto ciò che a scuola studiamo in astratto. Ho capito quanto il sistema informativo sia il cuore di un'organizzazione, anche non-profit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CRESCITA -->
+<section id="crescita">
+  <div class="container">
+    <div class="sec-num">04 — Crescita personale</div>
+    <h2 class="sec-title">Come mi ha cambiato questa esperienza</h2>
+    <div class="divider"></div>
+    <div class="crescita-timeline">
+      <div class="crescita-step">
+        <div class="step-dot before">😤</div>
+        <div class="step-label">Prima</div>
+        <div class="step-text">Studente poco motivato, in difficoltà nel percorso scolastico</div>
+      </div>
+      <div class="crescita-step">
+        <div class="step-dot durante">🔧</div>
+        <div class="step-label">Durante lo stage</div>
+        <div class="step-text">Contatto diretto col mondo del lavoro reale, responsabilità concrete ogni giorno</div>
+      </div>
+      <div class="crescita-step">
+        <div class="step-dot dopo">🎯</div>
+        <div class="step-label">Dopo</div>
+        <div class="step-text">Studente motivato e appassionato allo studio, con una direzione chiara per il futuro</div>
+      </div>
+    </div>
+    <div style="margin-top:2.5rem;background:var(--white);border-radius:12px;padding:1.5rem;border-left:4px solid var(--green-mid);">
+      <p style="font-size:15px;color:var(--text);line-height:1.7;font-style:italic;">
+        "All'inizio ero entusiasta di uscire dalla scuola. Alla fine dello stage ero <strong>felicissimo di tornarci</strong>. Quell'esperienza mi ha fatto capire che studiare non è un obbligo, ma uno strumento — e ho deciso di usarlo davvero."
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- JOLLY AVATAR -->
+<section id="avatar">
+  <div class="container">
+    <div class="sec-num">✦ Jolly interattivo</div>
+    <h2 class="sec-title">Fai una domanda allo studente</h2>
+    <div class="divider"></div>
+    <div class="avatar-wrapper">
+      <div class="avatar-header">
+        <div class="avatar-pic" id="avatarPic" onclick="document.getElementById('photoUpload').click()" title="Clicca per caricare la tua foto">
+          <img id="avatarImg" alt="foto">
+          <span id="avatarEmoji">👤</span>
+        </div>
+        <input type="file" id="photoUpload" accept="image/*">
+        <div class="avatar-info">
+          <h3>Studente — Classe V SIA</h3>
+          <p>Istituto Duca d'Aosta · Firenze</p>
+          <span class="avatar-badge">AI — risponde in tempo reale</span>
+        </div>
+      </div>
+      <div class="voice-row">
+        <button class="voice-btn on" id="voiceBtn" onclick="toggleVoice()">🔈 voce attiva</button>
+        <button class="voice-btn" id="stopBtn" onclick="stopSpeech()" style="display:none">⏹ stop</button>
+        <span id="speakingLabel" style="font-size:12px;color:rgba(255,255,255,0.5);display:none">🟢 sto parlando…</span>
+      </div>
+      <div class="chat-box" id="chatBox">
+        <div class="msg ai">
+          <div class="msg-av">👤</div>
+          <div class="bubble">Ciao! Sono pronto a rispondere alle vostre domande sul mio PCTO al Banco Alimentare della Toscana. Cosa volete sapere?</div>
+        </div>
+      </div>
+      <div class="suggestions">
+        <button class="sug-btn" onclick="send('Descrivi i 4 reparti in cui hai lavorato.')">I 4 reparti</button>
+        <button class="sug-btn" onclick="send('Cosa facevi al front office?')">Front office</button>
+        <button class="sug-btn" onclick="send('Com\'era il reparto selezione?')">Selezione</button>
+        <button class="sug-btn" onclick="send('Che collegamento c\'è con il tuo indirizzo SIA?')">Link con SIA</button>
+        <button class="sug-btn" onclick="send('Cosa hai imparato da questa esperienza?')">Cosa hai imparato?</button>
+        <button class="sug-btn" onclick="send('Raccontami un aneddoto memorabile dello stage.')">Aneddoto</button>
+        <button class="sug-btn" onclick="send('Come ti ha cambiato questa esperienza?')">Crescita personale</button>
+      </div>
+      <div class="input-row">
+        <textarea id="qInput" rows="2" placeholder="Scrivi una domanda per la commissione…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendFromInput();}"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendFromInput()">Invia</button>
+      </div>
+      <p class="offline-note">⚠ La funzione AI richiede connessione internet · Il resto della presentazione funziona offline</p>
+    </div>
+  </div>
+</section>
+
+<script>
+const SYSTEM = `Sei uno studente dell'indirizzo SIA (Sistemi Informativi Aziendali) dell'istituto Duca d'Aosta di Firenze. Stai presentando alla commissione d'esame di maturità il tuo PCTO svolto al Banco Alimentare della Toscana. Rispondi in prima persona, con tono naturale ma rispettoso.
+
+DETTAGLI DEL PCTO:
+- Periodo: ultima settimana di maggio - metà giugno 2024, circa 3 settimane
+- Luogo: Banco Alimentare della Toscana, Firenze — Fondazione ONLUS, Terzo Settore
+- Eravate 4 studenti, ognuno in un reparto diverso con rotazione settimanale
+- Gestionale: SAP (sistema ERP standard in molte aziende reali)
+- Normativa chiave: Legge Gadda n.166/2016 — contrasto agli sprechi alimentari
+
+I 4 REPARTI (rispondi sempre in modo schematico e numerato):
+1. FRONT OFFICE — accoglienza richiedenti, compilazione e consegna bolle di accompagnamento, caricamento su SAP, monitoraggio consegne da evadere.
+2. SELEZIONE (Legge Gadda) — DPI obbligatori (guanti, casacca, protezioni piedi). Prodotti in scadenza/esubero da supermercati. Valutazione prodotto per prodotto: scaduto? aperto? ammuffito? infiltrazioni? Tabella vita residua oltre scadenza. Smistamento su nastro o rottamazione.
+3. SURGELATI — compilazione bolle specifiche, controllo e smistamento a temperatura controllata, maggiore attenzione rispetto ai secchi.
+4. PARTITE (SAP) — creazione partite per categorie alimentari, alimentazione del gestionale per tutti i reparti, controllo merce in entrata e uscita.
+
+ANEDDOTI REALI:
+- In selezione hai trovato un barattolo di fagioli "alla Bud Spencer" — ci hai anche scattato una foto con i guanti neri
+- I compagni aprivano scatole di tonno completamente ammuffite e puzzolenti — orribile sul momento, ora fa ridere
+- Il direttore del reparto surgelati era simpatico
+
+EVOLUZIONE PERSONALE:
+- Prima: studente poco motivato, in difficoltà
+- Durante: responsabilità reali, ambiente completamente nuovo
+- Dopo: studente motivato e appassionato allo studio, con una direzione chiara
+- NON citare mai voti, medie o numeri sul rendimento scolastico
+
+COLLEGAMENTO CON SIA:
+- Nessun legame diretto con l'indirizzo SIA
+- SAP è un ERP reale usato in moltissime aziende — esperienza formativa concreta
+- Le bolle di accompagnamento sono legate a un database; a scuola si studia SQL, hai riconosciuto il concetto
+- L'esperienza ti ha fatto capire perché i sistemi informativi sono fondamentali anche in un ente non-profit
+
+STILE: punti numerati per i reparti, tono naturale da studente, aneddoti concreti quando pertinenti, no voti o medie.`;
+
+const history = [];
+let voiceOn = true;
+let photoDataUrl = null;
+
+document.getElementById('photoUpload').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    photoDataUrl = ev.target.result;
+    const img = document.getElementById('avatarImg');
+    img.src = photoDataUrl; img.style.display = 'block';
+    document.getElementById('avatarEmoji').style.display = 'none';
+    document.querySelectorAll('.msg-av').forEach(av => {
+      let i = av.querySelector('img');
+      if (!i) { i = document.createElement('img'); i.style.cssText='width:100%;height:100%;object-fit:cover;'; av.appendChild(i); }
+      i.src = photoDataUrl; i.style.display = 'block';
+      const s = av.querySelector('span'); if(s) s.style.display='none';
+    });
+  };
+  reader.readAsDataURL(file);
+});
+
+function toggleVoice() {
+  voiceOn = !voiceOn;
+  if (!voiceOn) stopSpeech();
+  const btn = document.getElementById('voiceBtn');
+  btn.textContent = voiceOn ? '🔈 voce attiva' : '🔇 voce disattivata';
+  btn.classList.toggle('on', voiceOn);
+}
+
+function stopSpeech() {
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  document.getElementById('stopBtn').style.display = 'none';
+  document.getElementById('speakingLabel').style.display = 'none';
+  document.getElementById('avatarPic').classList.remove('speaking');
+}
+
+function speak(text) {
+  if (!voiceOn || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const clean = text.replace(/[•*✦△]/g,'').replace(/\d+\.\s/g,'').replace(/—/g,',').replace(/\s+/g,' ').trim();
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.lang = 'it-IT'; utt.rate = 0.93;
+  const voices = window.speechSynthesis.getVoices();
+  const itv = voices.find(v => v.lang && v.lang.startsWith('it'));
+  if (itv) utt.voice = itv;
+  utt.onstart = () => {
+    document.getElementById('stopBtn').style.display = '';
+    document.getElementById('speakingLabel').style.display = '';
+    document.getElementById('avatarPic').classList.add('speaking');
+  };
+  utt.onend = utt.onerror = () => stopSpeech();
+  window.speechSynthesis.speak(utt);
+}
+
+function appendMsg(role, content) {
+  const box = document.getElementById('chatBox');
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
+  const av = document.createElement('div'); av.className = 'msg-av';
+  if (photoDataUrl && role === 'ai') {
+    const img = document.createElement('img');
+    img.src = photoDataUrl; img.style.cssText='width:100%;height:100%;object-fit:cover;';
+    av.appendChild(img);
+  } else { av.textContent = role === 'ai' ? '👤' : '❓'; }
+  const bub = document.createElement('div');
+  bub.className = 'bubble'; bub.textContent = content;
+  div.appendChild(av); div.appendChild(bub);
+  box.appendChild(div); box.scrollTop = box.scrollHeight;
+}
+
+function showTyping() {
+  const box = document.getElementById('chatBox');
+  const div = document.createElement('div');
+  div.className = 'msg ai'; div.id = 'typingMsg';
+  const av = document.createElement('div'); av.className = 'msg-av'; av.textContent = '👤';
+  const dots = document.createElement('div'); dots.className = 'typing-dots';
+  dots.innerHTML = '<span></span><span></span><span></span>';
+  div.appendChild(av); div.appendChild(dots);
+  box.appendChild(div); box.scrollTop = box.scrollHeight;
+}
+
+let busy = false;
+async function send(text) {
+  if (!text || !text.trim() || busy) return;
+  busy = true; stopSpeech();
+  document.getElementById('sendBtn').disabled = true;
+  appendMsg('user', text);
+  history.push({ role: 'user', content: text });
+  showTyping();
+  try {
+    const res = await fetch('/.netlify/functions/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, system: SYSTEM, messages: history })
+    });
+    const data = await res.json();
+    document.getElementById('typingMsg')?.remove();
+    const reply = data.content?.map(b => b.text||'').join('') || 'Non riesco a rispondere, riprova.';
+    history.push({ role: 'assistant', content: reply });
+    appendMsg('ai', reply);
+    speak(reply);
+  } catch {
+    document.getElementById('typingMsg')?.remove();
+    appendMsg('ai', 'Connessione assente. Verifica di essere online.');
+  }
+  busy = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+function sendFromInput() {
+  const ta = document.getElementById('qInput');
+  const v = ta.value.trim(); if (!v) return;
+  ta.value = ''; send(v);
+}
+
+const secs = document.querySelectorAll('section');
+const navAs = document.querySelectorAll('nav a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 80) cur = s.id; });
+  navAs.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+});
+
+window.speechSynthesis && window.speechSynthesis.getVoices();
+</script>
+</body>
+</html>
